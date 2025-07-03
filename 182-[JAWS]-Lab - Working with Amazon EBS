@@ -1,0 +1,178 @@
+182-[JAWS]-Lab - Working with Amazon EBS
+Working with Amazon EBS Lab
+Lab Overview
+Amazon Elastic Block Store (Amazon EBS) is a scalable, high-performance block storage service designed for Amazon Elastic Compute Cloud (Amazon EC2). In this lab, you will learn how to create an EBS volume, attach it to an EC2 instance, create a file system, and take a snapshot backup.
+Key Components
+
+EC2 instance
+EBS volume
+Snapshot
+
+Objectives
+By the end of this lab, you will be able to:
+
+Create an EBS volume.
+Attach and mount an EBS volume to an EC2 instance.
+Create a snapshot of an EBS volume.
+Create an EBS volume from a snapshot.
+
+Duration
+Approximately 45 minutes
+Accessing the AWS Management Console
+
+Choose Start Lab to launch your lab environment.
+Tip: If you need more time, choose Start Lab again to restart the timer.
+
+
+Wait for the lab resources to be ready (status will be displayed in the upper left corner).
+Choose AWS to open the AWS Management Console in a new browser tab. The system will automatically sign you in.
+Tip: If the tab does not open, check for a browser banner or icon indicating a pop-up is blocked, and choose Allow pop-up.
+
+
+Arrange the AWS Management Console and lab instructions side by side for easier navigation.
+
+Task 1: Creating a New EBS Volume
+In this task, you create and attach an EBS volume to an EC2 instance.
+
+In the AWS Management Console, use the search bar to enter EC2 and select it to open the EC2 Management Console.
+Navigate to Volumes in the left navigation pane.
+Choose Create Volume.
+Configure the volume settings (e.g., size, availability zone) and create the volume.
+
+Task 2: Attaching the Volume to an EC2 Instance
+
+Select My Volume from the Volumes list.
+From the Actions menu, choose Attach Volume.
+In the instance dropdown, select the Lab instance.
+For the Device name field, enter /dev/sdb. This identifier will be used in later tasks.
+Choose Attach Volume. The volume state should now be in-use.
+
+Task 3: Connecting to the Lab EC2 Instance
+In this task, you use EC2 Instance Connect to access the Lab EC2 instance.
+
+In the AWS Management Console, search for EC2 and open the EC2 Management Console.
+In the navigation pane, choose Instances.
+Select the Lab instance from the list.
+Choose Connect.
+On the EC2 Instance Connect tab, choose Connect to open a terminal window in a new browser tab.
+Note: If you prefer using an SSH client, refer to AWS documentation for connecting to a Linux instance.
+Tip: If the terminal becomes unresponsive, refresh the browser or reconnect using these steps.
+
+
+
+Task 4: Creating and Configuring the File System
+In this task, you configure the new volume as an ext3 file system and mount it to /mnt/data-store.
+
+To view available storage, run the following command in the EC2 Instance Connect terminal:
+df -h
+
+Example output:
+/dev/nvme0n1p1  8.0G  1.2G  6.8G  15% /
+
+
+Create a file on the volume:
+sudo touch /mnt/data-store/file.txt
+
+
+Create a directory for mounting:
+sudo mkdir /mnt/data-store
+
+
+Mount the new volume:
+sudo mount /dev/sdb /mnt/data-store
+
+
+Ensure the volume is mounted after instance restarts by adding to /etc/fstab:
+echo "/dev/sdb /mnt/data-store ext3 defaults,nofail 0 2" | sudo tee -a /etc/fstab
+
+
+Verify the /etc/fstab configuration:
+cat /etc/fstab
+
+
+Check available storage again:
+df -h
+
+The output should include a new line for /mnt/data-store.
+
+
+Task 5: Creating an Amazon EBS Snapshot
+Amazon EBS snapshots are stored in Amazon S3 and can be used to create new volumes for cloning or restoring backups.
+
+In the EC2 Management Console, navigate to Volumes and select My Volume.
+
+From the Actions menu, choose Create Snapshot.
+
+In the Tags section, add a tag:
+
+Key: Name
+Value: My Snapshot
+
+
+Choose Create Snapshot.
+
+In the left navigation pane, choose Snapshots to view the snapshot. The status will be Pending initially and change to Completed when finished.
+
+Note: Only used storage blocks are copied to snapshots; empty blocks do not consume snapshot storage space.
+
+
+In the EC2 Instance Connect terminal, delete the file created earlier:
+sudo rm /mnt/data-store/file.txt
+
+
+Verify the file deletion:
+ls /mnt/data-store/file.txt
+
+Expected output: ls: cannot access '/mnt/data-store/file.txt': No such file or directory
+
+
+Task 6: Restoring the Amazon EBS Snapshot
+Task 6.1: Creating a Volume from the Snapshot
+
+In the EC2 Management Console, navigate to Snapshots and select My Snapshot.
+From the Actions menu, choose Create Volume from Snapshot.
+Set the Availability Zone to match the one used earlier.
+In the Tags section, add a tag:
+Key: Name
+Value: Restored Volume
+
+
+Choose Create Volume.
+Navigate to Volumes to confirm the new volume’s status is Available.
+
+Task 6.2: Attaching the Restored Volume to the EC2 Instance
+
+Select Restored Volume.
+From the Actions menu, choose Attach Volume.
+In the instance dropdown, select the Lab instance.
+For the Device name field, enter /dev/sr0.
+Choose Attach Volume. The volume status should now be in-use.
+
+Task 6.3: Mounting the Restored Volume
+
+Create a directory for mounting:
+sudo mkdir /mnt/data-store2
+
+
+Mount the restored volume:
+sudo mount /dev/sr0 /mnt/data-store2
+
+
+Verify the restored file exists:
+ls /mnt/data-store2/file.txt
+
+You should see the file.txt file in the output.
+
+
+Conclusion
+Congratulations! You have successfully:
+
+Created an EBS volume.
+Attached and mounted an EBS volume to an EC2 instance.
+Created a snapshot of an EBS volume.
+Restored an EBS volume from a snapshot.
+
+Lab Complete
+
+Choose End Lab at the top of the page and confirm by selecting Yes.
+A panel will confirm that the lab has ended successfully.
