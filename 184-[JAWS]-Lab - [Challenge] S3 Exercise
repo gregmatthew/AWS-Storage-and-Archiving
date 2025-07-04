@@ -1,0 +1,104 @@
+184-[JAWS]-Lab - [Challenge] S3 Exercise
+Amazon S3 Challenge Lab
+Lab Overview
+In this challenge lab, you will create an Amazon Simple Storage Service (S3) bucket and perform routine tasks, such as uploading objects and configuring permissions to make those objects publicly accessible through a web browser.
+Objectives
+By the end of this challenge, you will be able to:
+
+Create an S3 bucket.
+Upload an object to the bucket.
+Access the object using a web browser.
+List the contents of the S3 bucket using the AWS Command Line Interface (AWS CLI).
+
+Duration
+Approximately 45 minutes.
+Accessing the AWS Management Console
+
+At the top of the lab instructions, click Start Lab to launch your lab.
+Wait until the Lab status reads "succeed," then click the X to close the Start Lab panel.
+At the top of the instructions, click AWS to open the AWS Management Console in a new browser tab.
+Tip: If a new tab does not open, check for a browser banner or icon indicating that pop-ups are blocked. Click the banner or icon and select Allow pop-ups.
+
+
+Navigate to the AWS Management Console alongside the lab instructions, ideally viewing both tabs simultaneously.
+At the top of the instructions, click Details, then select Show.
+Copy the values for SecretKey, PublicIP, and AccessKey into a text editor for use during the lab.
+Note: The PublicIP is the public IPv4 address of the Linux instance provisioned for this challenge.
+
+
+
+Task 1: Connecting to the CLI Host Instance
+To start, connect to the pre-provisioned CLI Host instance.
+
+In the AWS Management Console, search for EC2 in the search bar and select it to open the EC2 Management Console.
+In the navigation pane, click Instances.
+Select the CLI Host instance from the list.
+Click Connect.
+On the EC2 Instance Connect tab, click Connect.
+Note: For alternative methods to connect to the CLI Host instance, refer to the guidance on Connecting to Your Linux Instance.
+
+
+Once connected, you can configure and use the AWS CLI to interact with AWS services.
+
+Task 2: Configuring the AWS CLI
+Set up the AWS CLI profile with the provided credentials.
+
+In the EC2 Instance Connect terminal, run the following command:aws configure
+
+
+Enter the following values when prompted, using the credentials copied earlier:
+AWS Access Key ID: Paste the AccessKey value.
+AWS Secret Access Key: Paste the SecretKey value.
+Default region name: Enter us-east-2.
+Default output format: Enter json.
+
+
+You are now ready to run AWS CLI commands to interact with AWS services.
+
+Task 3: Completing the Challenge
+Perform the following tasks to complete the challenge:
+
+Create an S3 bucket:
+Use the AWS Management Console or AWS CLI to create a new S3 bucket.
+Example CLI command:aws s3 mb s3://your-unique-bucket-name --region us-east-2
+
+
+Ensure the bucket name is globally unique.
+
+
+Upload an object to the bucket:
+Upload a file (e.g., a text or image file) to the bucket using the AWS Management Console or CLI.
+Example CLI command:aws s3 cp local-file.txt s3://your-unique-bucket-name/
+
+
+
+
+Access the object using a web browser:
+Configure the bucket or object permissions to allow public access.
+Example CLI command to set public-read ACL:aws s3api put-object-acl --bucket your-unique-bucket-name --key local-file.txt --acl public-read
+
+
+Obtain the object’s URL (e.g., https://your-unique-bucket-name.s3.us-east-2.amazonaws.com/local-file.txt) and access it in a browser.
+
+
+List the contents of the S3 bucket using the AWS CLI:
+Run the following CLI command:aws s3 ls s3://your-unique-bucket-name/
+
+
+
+
+Capture screenshots of each step to submit to your instructor.
+
+Hint: Refer to the relevant course sections on S3 or the AWS S3 Documentation for guidance.
+Conclusion
+Congratulations! Upon completion, you have successfully:
+
+Created an S3 bucket.
+Uploaded an object to the bucket.
+Accessed the object using a web browser.
+Listed the bucket’s contents using the AWS CLI.
+
+Lab Completion
+
+At the top of the lab page, click End Lab, then select Yes to confirm.
+A panel will indicate that lab resources are terminating. Close the End Lab panel by clicking the X in the upper-right corner.
